@@ -24,10 +24,11 @@
 {
     NSMutableArray *_colors;
 }
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _colors = [[NSMutableArray alloc] init];
+    _colors = [@[[UIColor randomColor], [UIColor randomColor]] mutableCopy];
     _paletteLabel.delegate = self;
 }
 
