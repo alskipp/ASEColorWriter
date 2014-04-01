@@ -20,6 +20,7 @@
 		E72E064B18EB24AC0082D173 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72E062A18EB24AC0082D173 /* Foundation.framework */; };
 		E72E064C18EB24AC0082D173 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72E062E18EB24AC0082D173 /* UIKit.framework */; };
 		E72E06A518EB34C90082D173 /* ColorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E72E06A418EB34C90082D173 /* ColorCell.m */; };
+		E72E06AB18EB53160082D173 /* UIColor+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = E72E06AA18EB53160082D173 /* UIColor+Additions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,8 @@
 		E72E064918EB24AC0082D173 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		E72E06A318EB34C90082D173 /* ColorCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorCell.h; sourceTree = "<group>"; };
 		E72E06A418EB34C90082D173 /* ColorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorCell.m; sourceTree = "<group>"; };
+		E72E06A918EB53160082D173 /* UIColor+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Additions.h"; sourceTree = "<group>"; };
+		E72E06AA18EB53160082D173 /* UIColor+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Additions.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +119,8 @@
 				E72E064018EB24AC0082D173 /* ViewController.m */,
 				E72E06A318EB34C90082D173 /* ColorCell.h */,
 				E72E06A418EB34C90082D173 /* ColorCell.m */,
+				E72E06A918EB53160082D173 /* UIColor+Additions.h */,
+				E72E06AA18EB53160082D173 /* UIColor+Additions.m */,
 				E72E064218EB24AC0082D173 /* Images.xcassets */,
 				E72E063118EB24AC0082D173 /* Supporting Files */,
 			);
@@ -229,6 +234,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E72E06AB18EB53160082D173 /* UIColor+Additions.m in Sources */,
 				E72E064118EB24AC0082D173 /* ViewController.m in Sources */,
 				E72E06A518EB34C90082D173 /* ColorCell.m in Sources */,
 				E72E063B18EB24AC0082D173 /* AppDelegate.m in Sources */,
