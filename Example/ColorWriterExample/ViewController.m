@@ -10,8 +10,14 @@
 #import "ColorCell.h"
 #import "UIColor+Additions.h"
 
-@interface ViewController () <UITextFieldDelegate>
+#import <MessageUI/MessageUI.h>
+#import <MessageUI/MFMailComposeViewController.h>
+
+@interface ViewController () <UITextFieldDelegate, MFMailComposeViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *paletteLabel;
+
+- (IBAction)insertNewColor:(id)sender;
+- (IBAction)exportColors:(id)sender;
 @end
 
 @implementation ViewController
@@ -30,11 +36,32 @@
     [super didReceiveMemoryWarning];
 }
 
+#pragma mark - IBActions
+
 - (IBAction)insertNewColor:(id)sender;
 {
     [_colors insertObject:[UIColor randomColor] atIndex:0];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+- (IBAction)exportColors:(id)sender
+{
+    MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
+    mailViewController.mailComposeDelegate = self;
+    
+    NSString *paletteName = self.paletteLabel.text;
+    if ([paletteName length] == 0) {
+        paletteName = @"Untitled";
+    }
+    
+    [mailViewController setSubject:paletteName];
+
+    NSData * swatchData;
+    swatchData = [NSData data];
+    [mailViewController addAttachmentData:swatchData mimeType:@"application/octet-stream" fileName:[NSString stringWithFormat:@"%@.ase", paletteName]];
+    
+    [self presentViewController:mailViewController animated:YES completion:nil];
 }
 
 #pragma mark - Table View
@@ -65,6 +92,13 @@
     }
 }
 
+#pragma mark - MFMailComposeViewControllerDelegate
+
+-(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -72,6 +106,5 @@
     [textField resignFirstResponder];
     return YES;
 }
-
 
 @end
