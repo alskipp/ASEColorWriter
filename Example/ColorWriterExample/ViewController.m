@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "ColorCell.h"
+#import "UIColor+Additions.h"
 
 @interface ViewController () <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *paletteLabel;
@@ -37,7 +38,7 @@
 
 - (IBAction)insertNewObject:(id)sender;
 {
-    [_colors insertObject:[NSDate date] atIndex:0];
+    [_colors insertObject:[UIColor randomColor] atIndex:0];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
@@ -58,9 +59,7 @@
 {
     ColorCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
-//    UIColor *color = _colors[indexPath.row];
-
-    [cell setColor:[UIColor redColor]];
+    [cell setColor:_colors[indexPath.row]];
     return cell;
 }
 

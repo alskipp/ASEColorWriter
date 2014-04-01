@@ -7,6 +7,7 @@
 //
 
 #import "ColorCell.h"
+#import "UIColor+Additions.h"
 
 @interface ColorCell ()
 @property (weak, nonatomic) IBOutlet UIView *colorView;
@@ -18,6 +19,7 @@
 - (void)setColor:(UIColor *)color;
 {
     self.colorView.backgroundColor = color;
+    self.colorLabel.text = [color displayString];
 }
 
 @end

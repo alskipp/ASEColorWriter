@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface ColorCell : UITableViewCell
+
 - (void)setColor:(UIColor *)color;
+
 @end
