@@ -36,7 +36,7 @@
     return YES;
 }
 
-- (IBAction)insertNewObject:(id)sender;
+- (IBAction)insertNewColor:(id)sender;
 {
     [_colors insertObject:[UIColor randomColor] atIndex:0];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
