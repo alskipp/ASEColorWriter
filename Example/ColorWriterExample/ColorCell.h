@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  ColorCell.h
 //  ColorWriterExample
 //
 //  Created by Alan Skipp on 01/04/2014.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UITableViewController
-
+@interface ColorCell : UITableViewCell
+- (void)setColor:(UIColor *)color;
 @end
