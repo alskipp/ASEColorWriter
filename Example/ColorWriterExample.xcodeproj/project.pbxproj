@@ -21,6 +21,7 @@
 		E72E064C18EB24AC0082D173 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72E062E18EB24AC0082D173 /* UIKit.framework */; };
 		E72E06A518EB34C90082D173 /* ColorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E72E06A418EB34C90082D173 /* ColorCell.m */; };
 		E72E06AB18EB53160082D173 /* UIColor+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = E72E06AA18EB53160082D173 /* UIColor+Additions.m */; };
+		E75270A318EB753D009E6B8A /* ASEcolorWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = E75270A218EB753D009E6B8A /* ASEcolorWriter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		E72E06A418EB34C90082D173 /* ColorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorCell.m; sourceTree = "<group>"; };
 		E72E06A918EB53160082D173 /* UIColor+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Additions.h"; sourceTree = "<group>"; };
 		E72E06AA18EB53160082D173 /* UIColor+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Additions.m"; sourceTree = "<group>"; };
+		E75270A118EB753D009E6B8A /* ASEcolorWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASEcolorWriter.h; sourceTree = "<group>"; };
+		E75270A218EB753D009E6B8A /* ASEcolorWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASEcolorWriter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				E72E063018EB24AC0082D173 /* ColorWriterExample */,
+				E752709F18EB7517009E6B8A /* Vendor */,
 				E72E062918EB24AC0082D173 /* Frameworks */,
 				E72E062818EB24AC0082D173 /* Products */,
 			);
@@ -136,6 +140,24 @@
 				E72E063818EB24AC0082D173 /* ColorWriterExample-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E752709F18EB7517009E6B8A /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				E75270A018EB753D009E6B8A /* ASEcolorWriter */,
+			);
+			name = Vendor;
+			sourceTree = "<group>";
+		};
+		E75270A018EB753D009E6B8A /* ASEcolorWriter */ = {
+			isa = PBXGroup;
+			children = (
+				E75270A118EB753D009E6B8A /* ASEcolorWriter.h */,
+				E75270A218EB753D009E6B8A /* ASEcolorWriter.m */,
+			);
+			name = ASEcolorWriter;
+			path = ../ASEcolorWriter;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -238,6 +260,7 @@
 				E72E064118EB24AC0082D173 /* ViewController.m in Sources */,
 				E72E06A518EB34C90082D173 /* ColorCell.m in Sources */,
 				E72E063B18EB24AC0082D173 /* AppDelegate.m in Sources */,
+				E75270A318EB753D009E6B8A /* ASEcolorWriter.m in Sources */,
 				E72E063718EB24AC0082D173 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

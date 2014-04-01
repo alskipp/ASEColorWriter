@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "ColorCell.h"
 #import "UIColor+Additions.h"
+#import "ASEcolorWriter.h"
 
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
