@@ -30,12 +30,6 @@
     [super didReceiveMemoryWarning];
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    [textField resignFirstResponder];
-    return YES;
-}
-
 - (IBAction)insertNewColor:(id)sender;
 {
     [_colors insertObject:[UIColor randomColor] atIndex:0];
@@ -76,6 +70,13 @@
     }
 }
 
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
 
 
 @end
