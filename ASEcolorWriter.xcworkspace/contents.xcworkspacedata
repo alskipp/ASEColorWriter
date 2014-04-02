@@ -3,12 +3,12 @@
    version = "1.0">
    <Group
       location = "group:ASEcolorWriter"
-      name = "ASEcolorWriter">
+      name = "ASEColorWriter">
       <FileRef
-         location = "group:ASEcolorWriter.h">
+         location = "group:ASEColorWriter.h">
       </FileRef>
       <FileRef
-         location = "group:ASEcolorWriter.m">
+         location = "group:ASEColorWriter.m">
       </FileRef>
    </Group>
    <FileRef

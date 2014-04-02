@@ -1,5 +1,5 @@
 //
-//  ASEcolorWriter.m
+//  ASEColorWriter.m
 //
 //  Created by Alan Skipp on 01/04/2014.
 //  Copyright (c) 2014 Alan Skipp. All rights reserved.
@@ -73,9 +73,9 @@
 @end
 
 
-#import "ASEcolorWriter.h"
+#import "ASEColorWriter.h"
 
-@implementation ASEcolorWriter
+@implementation ASEColorWriter
 {
     NSArray *_colors;
     NSMutableData *_aseData;

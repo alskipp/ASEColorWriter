@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "ColorCell.h"
 #import "UIColor+Additions.h"
-#import "ASEcolorWriter.h"
+#import "ASEColorWriter.h"
 
 #import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
@@ -59,7 +59,7 @@
     
     [mailViewController setSubject:paletteName];
 
-    ASEcolorWriter *writer = [[ASEcolorWriter alloc] initWithColors:_colors paletteName:paletteName];
+    ASEColorWriter *writer = [[ASEColorWriter alloc] initWithColors:_colors paletteName:paletteName];
     NSData *swatchData = [writer data];
     
     [mailViewController addAttachmentData:swatchData mimeType:@"application/octet-stream" fileName:[NSString stringWithFormat:@"%@.ase", paletteName]];
