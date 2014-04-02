@@ -59,8 +59,9 @@
     
     [mailViewController setSubject:paletteName];
 
-    NSData * swatchData;
-    swatchData = [NSData data];
+    ASEcolorWriter *writer = [[ASEcolorWriter alloc] initWithColors:_colors paletteName:paletteName];
+    NSData *swatchData = [writer data];
+    
     [mailViewController addAttachmentData:swatchData mimeType:@"application/octet-stream" fileName:[NSString stringWithFormat:@"%@.ase", paletteName]];
     
     [self presentViewController:mailViewController animated:YES completion:nil];
