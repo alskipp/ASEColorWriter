@@ -5,14 +5,81 @@
 //  Copyright (c) 2014 Alan Skipp. All rights reserved.
 //
 
-#import "ASEcolorWriter.h"
+@interface NSMutableData (ASEAdditions)
++ (NSMutableData *)ASEDataWithLength:(UInt32)length; // length == number of colors + number of groups
+- (void)appendASESwatchName:(NSString *)name;
+- (void)appendASEColor:(UIColor *)color;
+- (void)appendASEData:(NSData *)data startMarker:(UInt16)marker;
+@end
 
-#define COLOR_CHANNELS 3
+@implementation NSMutableData (ASEAdditions)
+
++ (NSMutableData *)ASEDataWithLength:(UInt32)length
+{
+    NSData *nameData = [@"ASEF" dataUsingEncoding: NSASCIIStringEncoding];
+	UInt16 fileVersionMajor = CFSwapInt16HostToBig(1);
+	UInt16 fileVersionMinor = CFSwapInt16HostToBig(0);
+	UInt32 numberOfBlocks = CFSwapInt32HostToBig(length);
+    
+    NSMutableData *aseData = [NSMutableData data];
+	[aseData appendData:nameData];
+	[aseData appendBytes:&fileVersionMajor length:sizeof(UInt16)];
+	[aseData appendBytes:&fileVersionMinor length:sizeof(UInt16)];
+	[aseData appendBytes:&numberOfBlocks length:sizeof(UInt32)];
+    
+    return aseData;
+}
+
+- (void)appendASESwatchName:(NSString *)name;
+{
+    UInt16 nameSize = CFSwapInt16HostToBig((UInt16)[name length]+1);
+	NSData *nameData = [name dataUsingEncoding: NSUTF16BigEndianStringEncoding];
+	UInt16 terminate = CFSwapInt16HostToBig(0x0000);
+    
+    [self appendBytes:&nameSize length:sizeof(UInt16)];
+	[self appendData:nameData];
+	[self appendBytes:&terminate length:sizeof(UInt16)];
+}
+
+- (void)appendASEColor:(UIColor *)color
+{
+    NSData *colorModeData = [@"RGB " dataUsingEncoding: NSASCIIStringEncoding];
+    [self appendData:colorModeData];
+
+    CGFloat red, green, blue;
+    [color getRed:&red green:&green blue:&blue alpha:NULL];
+    
+    CFSwappedFloat32 col1, col2, col3;
+    
+    col1 = CFConvertFloatHostToSwapped((Float32)red);
+    col2 = CFConvertFloatHostToSwapped((Float32)green);
+    col3 = CFConvertFloatHostToSwapped((Float32)blue);
+    [self appendBytes:&col1 length:sizeof(Float32)];
+    [self appendBytes:&col2 length:sizeof(Float32)];
+    [self appendBytes:&col3 length:sizeof(Float32)];
+    
+    UInt16 swatchType = CFSwapInt16HostToBig(0); // Global swatch
+    [self appendBytes:&swatchType length:sizeof(UInt16)];
+}
+
+- (void)appendASEData:(NSData *)data startMarker:(UInt16)marker
+{
+    UInt32 blockLength = CFSwapInt32HostToBig((UInt32)[data length]);
+    [self appendBytes:&marker length:sizeof(UInt16)];
+    [self appendBytes:&blockLength length:sizeof(UInt32)];
+    [self appendData:data];
+}
+
+@end
+
+
+#import "ASEcolorWriter.h"
 
 @implementation ASEcolorWriter
 {
     NSArray *_colors;
-    NSMutableData *_swatchData;
+    NSMutableData *_aseData;
+    NSMutableData *_tempData;
 }
 
 - (instancetype)initWithColors:(NSArray *)colors paletteName:(NSString *)paletteName
@@ -20,94 +87,38 @@
     self = [super init];
     if (self) {
         _colors = colors;
-        _swatchData = [NSMutableData data];
+        _aseData = [NSMutableData ASEDataWithLength:(UInt32)[colors count] + 1]; // colors + 1 group
+        _tempData = [NSMutableData data];
     }
     return self;
 }
 
 - (NSData *)data
 {
-    [self appendFileSignature];
-    [self appendPaletteName:_paletteName];
+    [self appendGroupName:_paletteName];
     [self appendSwatches:_colors];
-    return _swatchData;
+    return _aseData;
 }
 
-- (void)appendFileSignature;
+- (void)appendGroupName:(NSString *)name;
 {
-	NSData *nameData = [@"ASEF" dataUsingEncoding: NSASCIIStringEncoding];
-    
-	UInt16 fileVersionMajor = CFSwapInt16HostToBig(1);
-	UInt16 fileVersionMinor = CFSwapInt16HostToBig(0);
-    
-    UInt32 blockLength = (UInt32)[_colors count] + 1; // number of colors + palette
-	UInt32 numberOfBlocks = CFSwapInt32HostToBig(blockLength);
-    
-	[_swatchData appendData:nameData];
-	[_swatchData appendBytes:&fileVersionMajor length:sizeof(UInt16)];
-	[_swatchData appendBytes:&fileVersionMinor length:sizeof(UInt16)];
-	[_swatchData appendBytes:&numberOfBlocks length:sizeof(UInt32)];
-}
+    [_tempData setLength:0];
+    [_tempData appendASESwatchName:name];
 
-- (void)appendPaletteName:(NSString *)name;
-{
     UInt16 groupStart = CFSwapInt16HostToBig(0xc001);
-	UInt32 blockLength = CFSwapInt32HostToBig((UInt32)([name length]*2)+4); //double byte name + 2 byte null termination
-	UInt16 nameSize = CFSwapInt16HostToBig((UInt16)[name length]+1);
-	NSData *nameData = [name dataUsingEncoding: NSUTF16BigEndianStringEncoding];
-	UInt16 terminate = CFSwapInt16HostToBig(0x0000);
-	
-	[_swatchData appendBytes:&groupStart length:sizeof(UInt16)];
-	[_swatchData appendBytes:&blockLength length:sizeof(UInt32)];
-	[_swatchData appendBytes:&nameSize length:sizeof(UInt16)];
-	[_swatchData appendData:nameData];
-	[_swatchData appendBytes:&terminate length:sizeof(UInt16)];
+    [_aseData appendASEData:_tempData startMarker:groupStart];
 }
 
 - (void)appendSwatches:(NSArray *)colors
 {
     for (UIColor *color in colors){
+        [_tempData setLength:0];
+        [_tempData appendASESwatchName:[self displayStringForColor:color]];
+        [_tempData appendASEColor:color];
         
-        NSString *colorName = [self displayStringForColor:color];
-		
-		UInt16 colStart = CFSwapInt16HostToBig(0x0001);
-		UInt32 blockLength = CFSwapInt32HostToBig((UInt32)([colorName length] * 2) + (COLOR_CHANNELS * 4) + 10);
-		UInt16 nameSize = CFSwapInt16HostToBig([colorName length]+1);
-		NSData *colorNameData = [colorName dataUsingEncoding: NSUTF16BigEndianStringEncoding];
-		UInt16 terminate = CFSwapInt16HostToBig(0x0000);
-		
-        NSData *colorModeData = [@"RGB " dataUsingEncoding: NSASCIIStringEncoding];
-        NSData *colorValueData = [self dataForColor:color];
-		UInt16 swatchType = CFSwapInt16HostToBig(2);
-        
-		[_swatchData appendBytes:&colStart length:sizeof(UInt16)];
-		[_swatchData appendBytes:&blockLength length:sizeof(UInt32)];
-		[_swatchData appendBytes:&nameSize length:sizeof(UInt16)];
-		[_swatchData appendData:colorNameData];
-		[_swatchData appendBytes:&terminate length:sizeof(UInt16)];
-		[_swatchData appendData:colorModeData];
-		[_swatchData appendData:colorValueData];
-		[_swatchData appendBytes:&swatchType length:sizeof(UInt16)];
+        UInt16 colorStart = CFSwapInt16HostToBig(0x0001);
+        [_aseData appendASEData:_tempData startMarker:colorStart];
 	}
-}
-
-- (NSData *)dataForColor:(UIColor *)color
-{
-    NSMutableData *colorValueData = [NSMutableData data];
-    
-    CGFloat red, green, blue;
-    [color getRed:&red green:&green blue:&blue alpha:NULL];
-    
-    CFSwappedFloat32 col1, col2, col3;
-
-    col1 = CFConvertFloatHostToSwapped((Float32)red);
-    col2 = CFConvertFloatHostToSwapped((Float32)green);
-    col3 = CFConvertFloatHostToSwapped((Float32)blue);
-    [colorValueData appendBytes:&col1 length:sizeof(Float32)];
-    [colorValueData appendBytes:&col2 length:sizeof(Float32)];
-    [colorValueData appendBytes:&col3 length:sizeof(Float32)];
-    
-    return colorValueData;
 }
 
 - (NSString *)displayStringForColor:(UIColor *)color
