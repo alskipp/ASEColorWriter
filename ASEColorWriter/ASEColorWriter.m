@@ -77,8 +77,6 @@
 
 @implementation ASEColorWriter
 {
-    NSArray *_colors;
-    NSString *_paletteName;
     NSMutableData *_aseData;
     NSMutableData *_tempData;
 }
@@ -87,12 +85,11 @@
 {
     self = [super init];
     if (self) {
-        _colors = colors;
         _aseData = [NSMutableData ASEDataWithLength:(UInt32)[colors count] + 1]; // colors + 1 group
         _tempData = [NSMutableData data];
         
-        [self appendGroupName:_paletteName];
-        [self appendSwatches:_colors];
+        [self appendGroupName:paletteName];
+        [self appendSwatches:colors];
     }
     return self;
 }
