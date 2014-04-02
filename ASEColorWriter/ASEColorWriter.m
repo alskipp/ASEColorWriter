@@ -7,7 +7,7 @@
 
 @interface NSMutableData (ASEAdditions)
 + (NSMutableData *)ASEDataWithLength:(UInt32)length; // length == number of colors + number of groups
-- (void)appendASESwatchName:(NSString *)name;
+- (void)replaceDataWithASEName:(NSString *)name;
 - (void)appendASEColor:(UIColor *)color;
 - (void)appendASEData:(NSData *)data startMarker:(UInt16)marker;
 @end
@@ -30,12 +30,13 @@
     return aseData;
 }
 
-- (void)appendASESwatchName:(NSString *)name;
+- (void)replaceDataWithASEName:(NSString *)name
 {
     UInt16 nameSize = CFSwapInt16HostToBig((UInt16)[name length]+1);
 	NSData *nameData = [name dataUsingEncoding: NSUTF16BigEndianStringEncoding];
 	UInt16 terminate = CFSwapInt16HostToBig(0x0000);
     
+    [self setLength:0];
     [self appendBytes:&nameSize length:sizeof(UInt16)];
 	[self appendData:nameData];
 	[self appendBytes:&terminate length:sizeof(UInt16)];
@@ -64,7 +65,9 @@
 
 - (void)appendASEData:(NSData *)data startMarker:(UInt16)marker
 {
+    marker = CFSwapInt16HostToBig(marker);
     UInt32 blockLength = CFSwapInt32HostToBig((UInt32)[data length]);
+    
     [self appendBytes:&marker length:sizeof(UInt16)];
     [self appendBytes:&blockLength length:sizeof(UInt32)];
     [self appendData:data];
@@ -101,22 +104,17 @@
 
 - (void)appendGroupName:(NSString *)name;
 {
-    [_tempData setLength:0];
-    [_tempData appendASESwatchName:name];
-
-    UInt16 groupStart = CFSwapInt16HostToBig(0xc001);
-    [_aseData appendASEData:_tempData startMarker:groupStart];
+    [_tempData replaceDataWithASEName:name];
+    [_aseData appendASEData:_tempData startMarker:0xc001];
 }
 
 - (void)appendSwatches:(NSArray *)colors
 {
     for (UIColor *color in colors){
-        [_tempData setLength:0];
-        [_tempData appendASESwatchName:[self displayStringForColor:color]];
+        [_tempData replaceDataWithASEName:[self displayStringForColor:color]];
         [_tempData appendASEColor:color];
         
-        UInt16 colorStart = CFSwapInt16HostToBig(0x0001);
-        [_aseData appendASEData:_tempData startMarker:colorStart];
+        [_aseData appendASEData:_tempData startMarker:0x0001];
 	}
 }
 
