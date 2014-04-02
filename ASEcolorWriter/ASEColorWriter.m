@@ -78,6 +78,7 @@
 @implementation ASEColorWriter
 {
     NSArray *_colors;
+    NSString *_paletteName;
     NSMutableData *_aseData;
     NSMutableData *_tempData;
 }

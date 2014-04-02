@@ -8,8 +8,6 @@
 #import <Foundation/Foundation.h>
 
 @interface ASEColorWriter : NSObject
-@property (retain, nonatomic) NSString *paletteName;
-
 - (instancetype)initWithColors:(NSArray *)colors paletteName:(NSString *)paletteName;
 - (NSData *)data;
 @end
