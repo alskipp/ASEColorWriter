@@ -5,6 +5,11 @@
 //  Copyright (c) 2014 Alan Skipp. All rights reserved.
 //
 
+/*
+    A description of the binary format of ASE (Adobe Swatch Exchange) can be found here:
+    http://www.selapa.net/swatches/colors/fileformats.php
+*/
+
 #import <Foundation/Foundation.h>
 
 @interface ASEColorWriter : NSObject
