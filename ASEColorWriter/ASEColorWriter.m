@@ -90,14 +90,15 @@
         _colors = colors;
         _aseData = [NSMutableData ASEDataWithLength:(UInt32)[colors count] + 1]; // colors + 1 group
         _tempData = [NSMutableData data];
+        
+        [self appendGroupName:_paletteName];
+        [self appendSwatches:_colors];
     }
     return self;
 }
 
 - (NSData *)data
 {
-    [self appendGroupName:_paletteName];
-    [self appendSwatches:_colors];
     return _aseData;
 }
 
