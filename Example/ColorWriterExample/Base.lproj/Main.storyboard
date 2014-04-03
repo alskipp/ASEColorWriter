@@ -57,7 +57,7 @@
                     </tableView>
                     <toolbarItems>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="07E-3i-grO"/>
-                        <barButtonItem title="Export" id="86Y-nh-CsK">
+                        <barButtonItem title="Email ASE file" id="86Y-nh-CsK">
                             <connections>
                                 <action selector="exportColors:" destination="vXZ-lx-hvc" id="XoZ-qi-fnv"/>
                             </connections>
