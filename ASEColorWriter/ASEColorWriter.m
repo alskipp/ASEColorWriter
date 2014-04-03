@@ -6,6 +6,7 @@
 //
 
 @interface NSMutableData (ASEAdditions)
+// initialises an 'ase' data file with file signature, file version and block length
 + (NSMutableData *)ASEDataWithLength:(UInt32)length; // length == number of colors + number of groups
 - (void)replaceDataWithASEName:(NSString *)name;
 - (void)appendASEColor:(UIColor *)color;
@@ -72,7 +73,6 @@
     [self appendBytes:&blockLength length:sizeof(UInt32)];
     [self appendData:data];
 }
-
 @end
 
 
