@@ -45,20 +45,24 @@
 
 - (void)appendASEColor:(UIColor *)color
 {
-    NSData *colorModeData = [@"RGB " dataUsingEncoding: NSASCIIStringEncoding];
-    [self appendData:colorModeData];
+    CGFloat c1, c2, c3;
+    [color getRed:&c1 green:&c2 blue:&c3 alpha:NULL];
 
-    CGFloat red, green, blue;
-    [color getRed:&red green:&green blue:&blue alpha:NULL];
-    
     CFSwappedFloat32 col1, col2, col3;
     
-    col1 = CFConvertFloatHostToSwapped((Float32)red);
-    col2 = CFConvertFloatHostToSwapped((Float32)green);
-    col3 = CFConvertFloatHostToSwapped((Float32)blue);
-    [self appendBytes:&col1 length:sizeof(Float32)];
-    [self appendBytes:&col2 length:sizeof(Float32)];
-    [self appendBytes:&col3 length:sizeof(Float32)];
+    col1 = CFConvertFloatHostToSwapped((Float32)c1);
+    col2 = CFConvertFloatHostToSwapped((Float32)c2);
+    col3 = CFConvertFloatHostToSwapped((Float32)c3);
+    
+    if (CGColorGetNumberOfComponents(color.CGColor) == 2) { // it's grayscale
+        [self appendData:[@"Gray" dataUsingEncoding: NSASCIIStringEncoding]];
+        [self appendBytes:&col1 length:sizeof(Float32)];
+    } else { // otherwise it's RGB
+        [self appendData:[@"RGB " dataUsingEncoding: NSASCIIStringEncoding]];
+        [self appendBytes:&col1 length:sizeof(Float32)];
+        [self appendBytes:&col2 length:sizeof(Float32)];
+        [self appendBytes:&col3 length:sizeof(Float32)];
+    }
     
     UInt16 swatchType = CFSwapInt16HostToBig(0); // Global swatch
     [self appendBytes:&swatchType length:sizeof(UInt16)];
@@ -120,13 +124,20 @@
 
 - (NSString *)displayStringForColor:(UIColor *)color
 {
-    CGFloat red, green, blue;
-    [color getRed:&red green:&green blue:&blue alpha:NULL];
+    NSString *colorString;
+    CGFloat c1, c2, c3;
     
-    return [NSString stringWithFormat:@"R=%d G=%d B=%d",
-            (UInt8)(red * 255),
-            (UInt8)(green * 255),
-            (UInt8)(blue * 255)];
+    if (CGColorGetNumberOfComponents(color.CGColor) == 2) {
+        [color getWhite:&c1 alpha:NULL];
+        colorString = [NSString stringWithFormat:@"K=%d", (UInt8)lroundf(100 - c1 * 100)];
+    } else {
+        [color getRed:&c1 green:&c2 blue:&c3 alpha:NULL];
+        colorString = [NSString stringWithFormat:@"R=%d G=%d B%d",
+                       (UInt8)(c1 * 255),
+                       (UInt8)(c2 * 255),
+                       (UInt8)(c3 * 255)];
+    }
+    return colorString;
 }
 
 @end
