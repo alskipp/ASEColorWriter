@@ -31,7 +31,7 @@
     
     if (CGColorGetNumberOfComponents(self.CGColor) == 2) {
         [self getWhite:&c1 alpha:NULL];
-        colorString = [NSString stringWithFormat:@"Black:%d", (UInt8)(100 - c1 * 100)];
+        colorString = [NSString stringWithFormat:@"Black:%d", (UInt8)lroundf(100 - c1 * 100)];
     } else {
         [self getRed:&c1 green:&c2 blue:&c3 alpha:NULL];
         colorString = [NSString stringWithFormat:@"R:%d G:%d B:%d",
